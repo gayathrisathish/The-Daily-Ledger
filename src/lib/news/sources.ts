@@ -2,39 +2,73 @@ import type { NewsSource } from "./types";
 
 export const newsSources: NewsSource[] = [
   {
-    id: "reuters-business",
-    name: "Reuters Business",
-    url: "https://www.reuters.com/business/rss.xml",
-    category: "Business"
+    id: "gnews-business",
+    name: "GNews Business",
+    query: "business",
+    category: "Business",
+    maxResults: 5
   },
   {
-    id: "reuters-markets",
-    name: "Reuters Markets",
-    url: "https://www.reuters.com/markets/rss.xml",
-    category: "Markets"
+    id: "gnews-economy",
+    name: "GNews Economy",
+    query: "economy",
+    category: "Economy",
+    maxResults: 5
   },
   {
-    id: "economictimes-markets",
-    name: "Economic Times Markets",
-    url: "https://economictimes.indiatimes.com/rss/market-news/rssfeed.xml",
-    category: "Markets"
+    id: "gnews-markets",
+    name: "GNews Markets",
+    query: "markets",
+    category: "Markets",
+    maxResults: 5
   },
   {
-    id: "moneycontrol-markets",
-    name: "Moneycontrol Markets",
-    url: "https://www.moneycontrol.com/rss/market-reports.xml",
-    category: "Markets"
+    id: "gnews-investing",
+    name: "GNews Investing",
+    query: "investing",
+    category: "Investing",
+    maxResults: 5
   },
   {
-    id: "rbi-press-releases",
-    name: "RBI Press Releases",
-    url: "https://www.rbi.org.in/scripts/BS_PressReleaseFeed.aspx",
-    category: "Policy"
+    id: "gnews-central-banks",
+    name: "GNews Central Banks",
+    query: "central banks",
+    category: "Central Banks",
+    maxResults: 5
   },
   {
-    id: "sebi-news",
-    name: "SEBI News",
-    url: "https://www.sebi.gov.in/sebiweb/home/Lists/LatestPressReleases/PressRelease.xml",
-    category: "Policy"
+    id: "gnews-inflation",
+    name: "GNews Inflation",
+    query: "inflation",
+    category: "Inflation",
+    maxResults: 5
+  },
+  {
+    id: "gnews-interest-rates",
+    name: "GNews Interest Rates",
+    query: "interest rates",
+    category: "Interest Rates",
+    maxResults: 5
+  },
+  {
+    id: "gnews-rbi",
+    name: "GNews RBI",
+    query: "RBI",
+    category: "RBI",
+    maxResults: 5
+  },
+  {
+    id: "gnews-federal-reserve",
+    name: "GNews Federal Reserve",
+    query: "Federal Reserve",
+    category: "Federal Reserve",
+    maxResults: 5
+  },
+  {
+    id: "gnews-earnings",
+    name: "GNews Earnings",
+    query: "earnings",
+    category: "Earnings",
+    maxResults: 5
   }
 ];

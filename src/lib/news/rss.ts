@@ -1,17 +1,46 @@
-import { XMLParser } from "fast-xml-parser";
-
+import { env } from "@/lib/env";
 import { newsSources } from "./sources";
 import type { NewsSource, NewsItem, NewsSourceStatus, RawFeedItem } from "./types";
 
-const parser = new XMLParser({
-  ignoreAttributes: false,
-  attributeNamePrefix: "",
-  allowBooleanAttributes: true,
-  parseTagValue: true,
-  trimValues: true
-});
+const GNEWS_API_URL = "https://gnews.io/api/v4/search";
 
-const safeFetch = async (url: string): Promise<string> => {
+type GNewsArticle = {
+  title?: string;
+  description?: string;
+  content?: string;
+  url?: string;
+  publishedAt?: string;
+};
+
+type GNewsResponse = {
+  totalArticles?: number;
+  articles?: GNewsArticle[];
+};
+
+const mapGNewsArticle = (article: GNewsArticle, source: NewsSource): RawFeedItem | null => {
+  const title = article.title?.trim();
+  const description = article.description?.trim() ?? article.content?.trim();
+  const link = article.url?.trim();
+  const publishedAt = article.publishedAt?.trim();
+
+  if (!title || !link) {
+    return null;
+  }
+
+  return {
+    title,
+    description,
+    summary: description,
+    link,
+    url: link,
+    pubDate: publishedAt,
+    published: publishedAt,
+    updated: publishedAt,
+    source
+  };
+};
+
+const safeFetchJson = async (url: string): Promise<GNewsResponse> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 
@@ -19,76 +48,34 @@ const safeFetch = async (url: string): Promise<string> => {
     const response = await fetch(url, { signal: controller.signal });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+      const message = await response.text().catch(() => "");
+      throw new Error(message ? `HTTP ${response.status}: ${message}` : `HTTP ${response.status}`);
     }
 
-    return await response.text();
+    return (await response.json()) as GNewsResponse;
   } finally {
     clearTimeout(timeout);
   }
 };
 
-const getStringField = (entry: Record<string, unknown>, key: string): string | undefined => {
-  const value = entry[key];
-
-  if (typeof value === "string") {
-    return value;
-  }
-
-  if (typeof value === "object" && value !== null) {
-    const objectValue = value as Record<string, unknown>;
-    const text = objectValue["#text"] ?? objectValue["text"];
-
-    if (typeof text === "string") {
-      return text;
-    }
-  }
-
-  return undefined;
-};
-
-const extractItems = (parsed: unknown, source: NewsSource): RawFeedItem[] => {
-  if (typeof parsed !== "object" || parsed === null) {
-    return [];
-  }
-
-  const feed = parsed as Record<string, unknown>;
-  const channel = (feed.rss ?? feed.feed ?? feed.RDF ?? feed.items ?? feed.atom) as Record<string, unknown> | undefined;
-
-  const itemCollection = channel?.channel?.item ?? channel?.entries ?? channel?.entry ?? feed?.item ?? feed?.entry;
-
-  if (!itemCollection) {
-    return [];
-  }
-
-  const items = Array.isArray(itemCollection) ? itemCollection : [itemCollection];
-
-  return items.map((item) => {
-    const entry = item as Record<string, unknown>;
-    const title = getStringField(entry, "title");
-    const description = getStringField(entry, "description") ?? getStringField(entry, "summary") ?? getStringField(entry, "content");
-    const link = getStringField(entry, "link") ?? getStringField(entry, "url");
-    const pubDate = getStringField(entry, "pubDate") ?? getStringField(entry, "published") ?? getStringField(entry, "updated");
-
-    return {
-      title,
-      description,
-      summary: description,
-      link,
-      url: link,
-      pubDate,
-      published: pubDate,
-      updated: getStringField(entry, "updated"),
-      source
-    };
-  });
-};
-
 export async function fetchSource(source: NewsSource): Promise<{ status: NewsSourceStatus; items: RawFeedItem[] }> {
   try {
-    const body = await safeFetch(source.url);
-    const parsed = parser.parse(body);
-    const items = extractItems(parsed, source);
+    if (!env.gnewsApiKey) {
+      throw new Error("GNEWS_API_KEY is not set");
+    }
+
+    const url = new URL(GNEWS_API_URL);
+    url.searchParams.set("q", source.query);
+    url.searchParams.set("lang", "en");
+    url.searchParams.set("sortby", "publishedAt");
+    url.searchParams.set("max", String(source.maxResults ?? 5));
+    url.searchParams.set("apikey", env.gnewsApiKey);
+
+    const parsed = await safeFetchJson(url.toString());
+    const items: RawFeedItem[] = (parsed.articles ?? []).flatMap((article) => {
+      const mapped = mapGNewsArticle(article, source);
+      return mapped ? [mapped] : [];
+    });
 
     return {
       status: {

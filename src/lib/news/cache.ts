@@ -1,9 +1,10 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Database } from "@/types/database";
 import type { RankedNewsItem } from "./types";
 
 export async function saveNewsCache(stories: RankedNewsItem[]): Promise<void> {
   const supabase = await createSupabaseServerClient();
-  const payload = stories.map((story) => ({
+  const payload: Database["public"]["Tables"]["news_cache"]["Insert"][] = stories.map((story) => ({
     id: story.id,
     title: story.title,
     summary: story.summary,
@@ -14,7 +15,7 @@ export async function saveNewsCache(stories: RankedNewsItem[]): Promise<void> {
     score: story.totalScore
   }));
 
-  const { error } = await supabase.from("news_cache").upsert(payload, { onConflict: ["id"] });
+  const { error } = await (supabase.from("news_cache") as any).upsert(payload, { onConflict: "id" });
 
   if (error) {
     throw error;
@@ -25,16 +26,7 @@ export async function getNewsCache(): Promise<RankedNewsItem[]> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("news_cache")
-    .select<{
-      id: string;
-      title: string;
-      summary: string;
-      url: string;
-      source: string;
-      category: string;
-      published_at: string;
-      score: number;
-    }>("*")
+    .select("*")
     .order("score", { ascending: false })
     .limit(20);
 
@@ -42,8 +34,10 @@ export async function getNewsCache(): Promise<RankedNewsItem[]> {
     throw error;
   }
 
+  const records = (data ?? []) as Database["public"]["Tables"]["news_cache"]["Row"][];
+
   return (
-    data ?? []
+    records
   ).map((item) => ({
     id: item.id,
     title: item.title,

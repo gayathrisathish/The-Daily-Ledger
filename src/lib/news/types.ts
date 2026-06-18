@@ -1,8 +1,9 @@
 export interface NewsSource {
   id: string;
   name: string;
-  url: string;
+  query: string;
   category: string;
+  maxResults?: number;
 }
 
 export interface RawFeedItem {
