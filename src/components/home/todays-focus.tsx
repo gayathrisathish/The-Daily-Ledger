@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { motion } from "framer-motion";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import { cn } from "@/lib/utils";
 interface TodaysFocusProps {
   title: string;
   description: string;
-  href: string;
+  href: Route;
   ctaLabel: string;
 }
 

@@ -1,16 +1,9 @@
-import { Flashcard } from "@/components/cards/flashcard";
+import { Flashcard, type StudyFlashcardProps } from "@/components/flashcards/flashcard";
 
-const cards = [
-  { front: "What is inflation?", back: "Placeholder back text for the definition." },
-  { front: "What is EBITDA?", back: "Placeholder back text for the accounting concept." }
-] as const;
+interface FlashcardVaultProps {
+  cards: StudyFlashcardProps[];
+}
 
-export function FlashcardVault(): React.JSX.Element {
-  return (
-    <section className="grid gap-6 md:grid-cols-2">
-      {cards.map((card) => (
-        <Flashcard key={card.front} {...card} />
-      ))}
-    </section>
-  );
+export function FlashcardVault({ cards }: FlashcardVaultProps): React.JSX.Element {
+  return <Flashcard cards={cards} />;
 }

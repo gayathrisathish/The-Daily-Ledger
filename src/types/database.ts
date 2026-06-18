@@ -6,22 +6,11 @@ type Table<Row> = {
   Update: Partial<Row>;
 };
 
-export interface UserRecord {
-  id: string;
-  email: string | null;
-  full_name: string | null;
-  avatar_url: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface EditionRecord {
   id: string;
   edition_date: string;
-  slug: string;
-  title: string;
-  summary: string | null;
-  status: "draft" | "published";
+  market_mood: string;
+  reading_time: string;
   created_at: string;
   updated_at: string;
 }
@@ -30,11 +19,10 @@ export interface StoryRecord {
   id: string;
   edition_id: string;
   headline: string;
-  source: string;
-  url: string;
-  summary: string;
-  section: string;
-  rank: number;
+  what_happened: string;
+  why_it_matters: string;
+  beginner_translation: string;
+  story_order: number;
   created_at: string;
   updated_at: string;
 }
@@ -42,98 +30,110 @@ export interface StoryRecord {
 export interface MarketSnapshotRecord {
   id: string;
   edition_id: string;
-  symbol: string;
-  label: string;
-  value: string;
-  change_text: string;
-  direction: "up" | "down" | "flat";
+  asset_name: string;
+  asset_value: string;
+  daily_change: string;
   explanation: string;
   created_at: string;
+  updated_at: string;
 }
 
 export interface ConceptRecord {
   id: string;
-  slug: string;
   title: string;
   definition: string;
-  example: string;
+  simple_example: string;
   why_professionals_care: string;
+  why_you_saw_it_today: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface CompanyRecord {
   id: string;
-  slug: string;
   name: string;
   description: string;
-  revenue_model: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface CareerArticleRecord {
-  id: string;
-  slug: string;
-  title: string;
-  category: string;
-  body: string;
+  why_investors_care: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface QuizRecord {
   id: string;
-  edition_id: string | null;
+  edition_id: string;
   title: string;
-  quiz_type: "daily" | "weekly" | "archive";
   created_at: string;
+  updated_at: string;
 }
 
 export interface QuizQuestionRecord {
   id: string;
   quiz_id: string;
-  prompt: string;
-  options: string[];
+  question: string;
+  option_a: string;
+  option_b: string;
+  option_c: string;
+  option_d: string;
   correct_answer: string;
   explanation: string;
-  position: number;
   created_at: string;
+  updated_at: string;
 }
 
 export interface FlashcardRecord {
   id: string;
-  concept_id: string | null;
+  edition_id: string;
   front: string;
   back: string;
-  deck_name: string;
+  category: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GlossaryRecord {
+  id: string;
+  edition_id: string;
+  term: string;
+  definition: string;
+  simple_explanation: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NewsCacheRecord {
+  id: string;
+  title: string;
+  summary: string;
+  url: string;
+  source: string;
+  category: string;
+  published_at: string;
+  score: number;
   created_at: string;
 }
 
-export interface UserProgressRecord {
+export interface ReadingStreakRecord {
   id: string;
   user_id: string;
-  entity_type: string;
-  entity_id: string;
-  completion_status: "not_started" | "in_progress" | "complete";
-  score: number | null;
+  current_streak: number;
+  longest_streak: number;
   updated_at: string;
 }
 
 export interface Database {
   public: {
     Tables: {
-      users: Table<UserRecord>;
       editions: Table<EditionRecord>;
       stories: Table<StoryRecord>;
       market_snapshots: Table<MarketSnapshotRecord>;
       concepts: Table<ConceptRecord>;
       companies: Table<CompanyRecord>;
-      career_articles: Table<CareerArticleRecord>;
       quizzes: Table<QuizRecord>;
       quiz_questions: Table<QuizQuestionRecord>;
       flashcards: Table<FlashcardRecord>;
-      user_progress: Table<UserProgressRecord>;
+      glossary: Table<GlossaryRecord>;
+      news_cache: Table<NewsCacheRecord>;
+      reading_streaks: Table<ReadingStreakRecord>;
     };
   };
 }

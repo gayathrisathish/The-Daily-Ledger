@@ -1,5 +1,7 @@
+import type { Route } from "next";
+
 export interface NavItem {
-  href: string;
+  href: Route;
   label: string;
 }
 

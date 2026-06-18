@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { motion } from "framer-motion";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -11,11 +12,11 @@ interface HeroSectionProps {
   subtitle: string;
   primaryCta: {
     label: string;
-    href: string;
+    href: Route;
   };
   secondaryCta: {
     label: string;
-    href: string;
+    href: Route;
   };
 }
 

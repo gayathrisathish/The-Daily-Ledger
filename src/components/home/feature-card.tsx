@@ -1,21 +1,32 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { motion } from "framer-motion";
-import type { LucideIcon } from "lucide-react";
+import { Brain, GraduationCap, Newspaper, type LucideIcon } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+const featureIcons = {
+  newspaper: Newspaper,
+  graduationCap: GraduationCap,
+  brain: Brain
+} as const;
+
+export type FeatureIconName = keyof typeof featureIcons;
+
 export interface FeatureCardProps {
   title: string;
   description: string;
-  icon: LucideIcon;
-  href: string;
+  iconName: FeatureIconName;
+  href: Route;
   className?: string;
 }
 
-export function FeatureCard({ title, description, icon: Icon, href, className }: FeatureCardProps) {
+export function FeatureCard({ title, description, iconName, href, className }: FeatureCardProps) {
+  const Icon = featureIcons[iconName];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}

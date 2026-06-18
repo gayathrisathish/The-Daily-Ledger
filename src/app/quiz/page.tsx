@@ -1,35 +1,65 @@
+import Link from "next/link";
+
 import { PageShell } from "@/components/layout/page-shell";
-import { QuizCard } from "@/components/quiz/quiz-card";
+import { PageHeader } from "@/components/shared/page-header";
+import { QuizStudy } from "@/components/quiz/quiz-study";
+import { EmptyState } from "@/components/shared/empty-state";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { getLatestEdition } from "@/lib/data/editions";
+import { getByEditionId as getQuizzesByEditionId, getQuestionsByQuizId } from "@/lib/data/quizzes";
 
-const quizzes = [
-  {
-    title: "Daily Quiz",
-    description: "A short recall check based on today\'s edition.",
-    questionCount: 5,
-    label: "Daily"
-  },
-  {
-    title: "Weekly Quiz",
-    description: "A broader review of the week\'s key stories.",
-    questionCount: 10,
-    label: "Weekly"
-  },
-  {
-    title: "Past Quizzes",
-    description: "Review prior sets to strengthen retention.",
-    questionCount: 12,
-    label: "Archive"
+export default async function QuizPage() {
+  const edition = await getLatestEdition();
+
+  if (!edition) {
+    return <EmptyState title="No quiz available" description="A quiz will appear once the next edition is published." />;
   }
-];
 
-export default function QuizCenterPage() {
+  const quizzes = await getQuizzesByEditionId(edition.id);
+  const quiz = quizzes[0];
+
+  if (!quiz) {
+    return <EmptyState title="No quiz available" description="This edition does not have any questions yet." />;
+  }
+
+  const questions = await getQuestionsByQuizId(quiz.id);
+
+  const formattedQuestions = questions.map((question, index) => ({
+    questionNumber: index + 1,
+    question: question.question,
+    options: [
+      { label: question.option_a, value: "a" },
+      { label: question.option_b, value: "b" },
+      { label: question.option_c, value: "c" },
+      { label: question.option_d, value: "d" }
+    ],
+    correctAnswer: question.correct_answer,
+    explanation: question.explanation,
+    whyItMatters: "Review why this idea matters for market context today."
+  }));
+
   return (
-    <PageShell title="Quiz Center" description="Auto-generated recall checks to reinforce the concepts and stories you just read.">
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {quizzes.map((quiz) => (
-          <QuizCard key={quiz.title} {...quiz} />
-        ))}
-      </section>
+    <PageShell title="Quiz Center" description="Active recall questions based on today’s edition to reinforce retention.">
+      <PageHeader
+        title="Today's Quiz"
+        description={`${formattedQuestions.length} questions · Estimated time: ${Math.max(3, Math.ceil(formattedQuestions.length / 2))} minutes · Progress updates as you answer.`}
+      />
+
+      {formattedQuestions.length > 0 ? (
+        <QuizStudy questions={formattedQuestions} />
+      ) : (
+        <EmptyState title="No questions to display" description="This quiz will show up shortly." />
+      )}
+
+      <div className="flex flex-wrap gap-3">
+        <Link href="/today" className={cn(buttonVariants({ variant: "outline" }))}>
+          Review Today's Edition
+        </Link>
+        <Link href="/flashcards" className={cn(buttonVariants({ variant: "default" }))}>
+          Study Flashcards
+        </Link>
+      </div>
     </PageShell>
   );
 }

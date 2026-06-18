@@ -24,7 +24,7 @@ export default function CompaniesPage() {
     <PageShell title="Companies" description="A company hub that explains business models, recent news, and investor relevance.">
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {companies.map((company) => (
-          <FeatureCard key={company.title} title={company.title} description={company.description} href={company.href} badge="Company" />
+          <FeatureCard key={company.title} title={company.title} description={company.description} href={company.href as never} badge="Company" />
         ))}
       </section>
     </PageShell>

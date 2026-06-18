@@ -7,6 +7,8 @@ import { MarketMoodCard } from "@/components/home/market-mood-card";
 import { TopicGrid } from "@/components/home/topic-grid";
 import { TodaysFocus } from "@/components/home/todays-focus";
 import { SectionHeader } from "@/components/ui/section-header";
+import type { FeatureCardProps } from "@/components/home/feature-card";
+import type { TopicCardProps } from "@/components/home/topic-card";
 
 const liveNews = [
   { time: "12:18", headline: "Fed Signals Rates May Stay Higher" },
@@ -17,28 +19,28 @@ const liveNews = [
   { time: "11:39", headline: "IPO Activity Starts To Warm Up" }
 ];
 
-const featureCards = [
+const featureCards: FeatureCardProps[] = [
   {
     title: "Today's Edition",
     description: "The most important financial stories explained in plain English.",
-    href: "/edition",
-    icon: Newspaper
+    href: "/today",
+    iconName: "newspaper"
   },
   {
     title: "Finance School",
     description: "Learn one finance concept every day.",
     href: "/finance-school",
-    icon: GraduationCap
+    iconName: "graduationCap"
   },
   {
     title: "Quiz Center",
     description: "Test what you learned and improve retention.",
     href: "/quiz",
-    icon: Brain
+    iconName: "brain"
   }
 ];
 
-const recentTopics = [
+const recentTopics: TopicCardProps[] = [
   {
     title: "Inflation",
     description: "Why prices move slowly, how central banks respond, and why investors keep watching the print.",
@@ -89,7 +91,7 @@ export default function HomePage() {
       <HeroSection
         title={"Understanding Markets,\nOne Story At A Time."}
         subtitle="The Daily Ledger transforms financial news into understanding through explanations, quizzes, flashcards, and active recall."
-        primaryCta={{ label: "Read Today's Edition", href: "/edition" }}
+        primaryCta={{ label: "Read Today's Edition", href: "/today" }}
         secondaryCta={{ label: "Start Learning", href: "/finance-school" }}
       />
 
@@ -110,7 +112,7 @@ export default function HomePage() {
         <TodaysFocus
           title="Why Interest Rates Move Markets"
           description="Learn how inflation, central banks, and bond yields influence stocks and the wider economy."
-          href="/edition"
+          href="/today"
           ctaLabel="Explore Topic"
         />
       </section>

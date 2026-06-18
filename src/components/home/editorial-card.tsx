@@ -1,20 +1,34 @@
+"use client";
+
 import Link from "next/link";
+import type { Route } from "next";
 import { motion } from "framer-motion";
-import { type LucideIcon } from "lucide-react";
+import { Brain, GraduationCap, Landmark, Newspaper, type LucideIcon } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
+const editorialIcons = {
+  newspaper: Newspaper,
+  graduationCap: GraduationCap,
+  brain: Brain,
+  landmark: Landmark
+} as const;
+
+type EditorialIconName = keyof typeof editorialIcons;
+
 interface EditorialCardProps {
   title: string;
   description: string;
-  href?: string;
-  icon?: LucideIcon;
+  href?: Route;
+  iconName?: EditorialIconName;
   meta?: string;
   className?: string;
 }
 
-export function EditorialCard({ title, description, href, icon: Icon, meta, className }: EditorialCardProps) {
+export function EditorialCard({ title, description, href, iconName, meta, className }: EditorialCardProps) {
+  const Icon = iconName ? editorialIcons[iconName] : null;
+
   const content = (
     <motion.article whileHover={{ y: -4, scale: 1.01 }} transition={{ duration: 0.18, ease: "easeOut" }} className={cn("h-full", className)}>
       <Card className="h-full overflow-hidden border-border/80 bg-card/90">

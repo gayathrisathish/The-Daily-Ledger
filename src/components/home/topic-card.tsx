@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { Route } from "next";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
@@ -9,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export interface TopicCardProps {
   title: string;
   description: string;
-  href: string;
+  href: Route;
 }
 
 export function TopicCard({ title, description, href }: TopicCardProps) {

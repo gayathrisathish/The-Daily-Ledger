@@ -1,7 +1,9 @@
+import type { Route } from "next";
+
 export interface ContentCard {
   title: string;
   description: string;
-  href?: string;
+  href?: Route;
 }
 
 export interface MarketStat {

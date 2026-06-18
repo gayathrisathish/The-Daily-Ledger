@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ContentCard } from "@/types/content";
@@ -14,5 +15,5 @@ export function SectionCard({ title, description, href }: ContentCard): React.JS
     </Card>
   );
 
-  return href ? <Link href={href}>{content}</Link> : content;
+  return href ? <Link href={href as Route}>{content}</Link> : content;
 }
