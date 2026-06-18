@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 60 20% 98%;
+  --foreground: 220 39% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 39% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 39% 11%;
+  --primary: 174 84% 25%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 60 12% 95%;
+  --secondary-foreground: 220 39% 11%;
+  --muted: 60 10% 94%;
+  --muted-foreground: 215 15% 42%;
+  --accent: 174 84% 25%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 60 9% 86%;
+  --input: 60 9% 86%;
+  --ring: 174 84% 25%;
+  --radius: 1.25rem;
+}
+
+.dark {
+  --background: 215 32% 7%;
+  --foreground: 210 40% 98%;
+  --card: 220 39% 11%;
+  --card-foreground: 210 40% 98%;
+  --popover: 220 39% 11%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 174 72% 53%;
+  --primary-foreground: 215 32% 7%;
+  --secondary: 220 28% 15%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 220 25% 14%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 174 72% 53%;
+  --accent-foreground: 215 32% 7%;
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 220 24% 18%;
+  --input: 220 24% 18%;
+  --ring: 174 72% 53%;
+}
+
+* {
+  @apply border-border;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: var(--font-plus-jakarta-sans), Inter, Arial, Helvetica, sans-serif;
+  background-image:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(15, 118, 110, 0.05), transparent 24%),
+    radial-gradient(circle at bottom center, rgba(148, 163, 184, 0.06), transparent 28%);
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.18);
+  color: hsl(var(--foreground));
+}
