@@ -6,6 +6,7 @@ export async function POST() {
     const result = await generateDailyLedgerEdition();
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

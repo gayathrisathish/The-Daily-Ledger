@@ -1,6 +1,7 @@
 import { env } from "@/lib/env";
+import { pipelineLog } from "@/lib/pipeline/logger";
 import { newsSources } from "./sources";
-import type { NewsSource, NewsItem, NewsSourceStatus, RawFeedItem } from "./types";
+import type { NewsSource, NewsSourceStatus, RawFeedItem } from "./types";
 
 const GNEWS_API_URL = "https://gnews.io/api/v4/search";
 
@@ -77,6 +78,11 @@ export async function fetchSource(source: NewsSource): Promise<{ status: NewsSou
       return mapped ? [mapped] : [];
     });
 
+    pipelineLog("articles_fetched", `Source ${source.name} fetched`, {
+      sourceId: source.id,
+      articleCount: items.length
+    });
+
     return {
       status: {
         source,
@@ -87,6 +93,11 @@ export async function fetchSource(source: NewsSource): Promise<{ status: NewsSou
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+
+    pipelineLog("articles_fetched", `Source ${source.name} failed`, {
+      sourceId: source.id,
+      error: message
+    });
 
     return {
       status: {
